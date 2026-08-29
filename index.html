@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Absensi Kelas 11</title>
+  <style>
+    body { font-family: sans-serif; background: #f4f4f9; padding: 20px; }
+    .card { background: white; padding: 20px; border-radius: 8px; max-width: 400px; margin: auto; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+    h2 { text-align: center; color: #333; }
+    label { font-weight: bold; font-size: 14px; }
+    input, select, button { width: 100%; padding: 10px; margin-top: 8px; margin-bottom: 15px; box-sizing: border-box; border-radius: 5px; border: 1px solid #ccc; }
+    button { background: #007bff; color: white; font-weight: bold; border: none; cursor: pointer; }
+    #pesan { font-weight: bold; text-align: center; margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>Form Absensi Kelas</h2>
+    <form id="formAbsen">
+      <label>Nama Siswa:</label>
+      <input type="text" id="nama" placeholder="Ketik nama kamu..." required>
+
+      <label>Kelas:</label>
+      <input type="text" id="kelas" value="11 SMA" required>
+
+      <label>Keterangan:</label>
+      <select id="status">
+        <option value="Hadir">Hadir</option>
+        <option value="Izin">Izin</option>
+        <option value="Sakit">Sakit</option>
+      </select>
+
+      <button type="submit" id="btnKirim">Kirim Absen</button>
+    </form>
+    <p id="pesan"></p>
+  </div>
+
+  <script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbznBip1tRQSkc8PruvtFhc-KlytnK1vvqRrjnlVBHYGqxLpL25VOx1CKkf5zBwNFavB/exec';
+
+    document.getElementById('formAbsen').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const pesan = document.getElementById('pesan');
+      const btnKirim = document.getElementById('btnKirim');
+      
+      pesan.innerText = 'Sedang mengirim data...';
+      pesan.style.color = 'blue';
+      btnKirim.disabled = true;
+
+      const data = {
+        nama: document.getElementById('nama').value,
+        kelas: document.getElementById('kelas').value,
+        status: document.getElementById('status').value
+      };
+
+      fetch(scriptURL, {
+        method: 'POST',
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        pesan.innerText = 'Absen Berhasil Terkirim!';
+        pesan.style.color = 'green';
+        document.getElementById('formAbsen').reset();
+        btnKirim.disabled = false;
+      })
+      .catch(error => {
+        pesan.innerText = 'Gagal mengirim data. Coba lagi!';
+        pesan.style.color = 'red';
+        btnKirim.disabled = false;
+        console.error('Error!', error.message);
+      });
+    });
+  </script>
+</body>
+</html>
