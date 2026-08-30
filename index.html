@@ -8,29 +8,44 @@
     body { font-family: sans-serif; background: #f4f4f9; padding: 20px; }
     .card { background: white; padding: 20px; border-radius: 8px; max-width: 400px; margin: auto; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
     h2 { text-align: center; color: #333; }
-    label { font-weight: bold; font-size: 14px; }
-    input, select, button { width: 100%; padding: 10px; margin-top: 8px; margin-bottom: 15px; box-sizing: border-box; border-radius: 5px; border: 1px solid #ccc; }
-    button { background: #007bff; color: white; font-weight: bold; border: none; cursor: pointer; }
+    label { font-weight: bold; font-size: 14px; margin-top: 10px; display: block; }
+    input, select, button { width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 10px; box-sizing: border-box; border-radius: 5px; border: 1px solid #ccc; }
+    button { background: #007bff; color: white; font-weight: bold; border: none; cursor: pointer; margin-top: 15px; }
     #pesan { font-weight: bold; text-align: center; margin-top: 10px; }
+    .hidden { display: none; }
   </style>
 </head>
 <body>
 
   <div class="card">
-    <h2>Form Absensi Kelas</h2>
+    <h2>Form Absensi Kelas 11</h2>
     <form id="formAbsen">
       <label>Nama Siswa:</label>
       <input type="text" id="nama" placeholder="Ketik nama kamu..." required>
 
       <label>Kelas:</label>
-      <input type="text" id="kelas" value="11 SMA" required>
+      <select id="kelas">
+        <option value="11-1">11-1</option>
+        <option value="11-2">11-2</option>
+        <option value="11-3">11-3</option>
+        <option value="11-4">11-4</option>
+        <option value="11-5">11-5</option>
+        <option value="11-6">11-6</option>
+        <option value="11-7">11-7</option>
+      </select>
 
       <label>Keterangan:</label>
-      <select id="status">
+      <select id="status" onchange="toggleUpload()">
         <option value="Hadir">Hadir</option>
         <option value="Izin">Izin</option>
         <option value="Sakit">Sakit</option>
       </select>
+
+      <!-- Input File (Muncul kalau pilih Izin/Sakit) -->
+      <div id="boxUpload" class="hidden">
+        <label>Upload Bukti Surat/Foto:</label>
+        <input type="file" id="fileBukti" accept="image/*,.pdf">
+      </div>
 
       <button type="submit" id="btnKirim">Kirim Absen</button>
     </form>
@@ -38,22 +53,49 @@
   </div>
 
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbznBip1tRQSkc8PruvtFhc-KlytnK1vvqRrjnlVBHYGqxLpL25VOx1CKkf5zBwNFavB/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzTpkFh5DM_7PWOx8i6bTSrEJExv73EcTWydN4ch-XBZrj87y2ewn9FrtVfagtRkW3MGQ/exec';
 
-    document.getElementById('formAbsen').addEventListener('submit', function(e) {
+    // Tampilkan input file hanya jika memilih Izin atau Sakit
+    function toggleUpload() {
+      const status = document.getElementById('status').value;
+      const boxUpload = document.getElementById('boxUpload');
+      if (status === 'Izin' || status === 'Sakit') {
+        boxUpload.classList.remove('hidden');
+      } else {
+        boxUpload.classList.add('hidden');
+      }
+    }
+
+    document.getElementById('formAbsen').addEventListener('submit', async function(e) {
       e.preventDefault();
       
       const pesan = document.getElementById('pesan');
       const btnKirim = document.getElementById('btnKirim');
+      const fileInput = document.getElementById('fileBukti');
       
       pesan.innerText = 'Sedang mengirim data...';
       pesan.style.color = 'blue';
       btnKirim.disabled = true;
 
+      let fileData = null;
+      let fileName = null;
+      let fileType = null;
+
+      // Jika ada file yang diunggah
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        fileName = file.name;
+        fileType = file.type;
+        fileData = await toBase64(file);
+      }
+
       const data = {
         nama: document.getElementById('nama').value,
         kelas: document.getElementById('kelas').value,
-        status: document.getElementById('status').value
+        status: document.getElementById('status').value,
+        fileData: fileData,
+        fileName: fileName,
+        fileType: fileType
       };
 
       fetch(scriptURL, {
@@ -64,6 +106,7 @@
         pesan.innerText = 'Absen Berhasil Terkirim!';
         pesan.style.color = 'green';
         document.getElementById('formAbsen').reset();
+        toggleUpload();
         btnKirim.disabled = false;
       })
       .catch(error => {
@@ -73,6 +116,18 @@
         console.error('Error!', error.message);
       });
     });
+
+    // Fungsi konversi file ke format Base64
+    const toBase64 = file => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(resolveResult(reader.result));
+      reader.onerror = error => reject(error);
+    });
+    
+    function resolveResult(res) {
+      return res;
+    }
   </script>
 </body>
 </html>
