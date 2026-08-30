@@ -3,67 +3,275 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Absensi Kelas 11</title>
+  <title>Absensi SMAN 23 Jakarta</title>
+  <!-- FontAwesome untuk Ikon Modern -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body { font-family: sans-serif; background: #f4f4f9; padding: 20px; }
-    .card { background: white; padding: 20px; border-radius: 8px; max-width: 400px; margin: auto; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-    h2 { text-align: center; color: #333; }
-    label { font-weight: bold; font-size: 14px; margin-top: 10px; display: block; }
-    input, select, button { width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 10px; box-sizing: border-box; border-radius: 5px; border: 1px solid #ccc; }
-    button { background: #007bff; color: white; font-weight: bold; border: none; cursor: pointer; margin-top: 15px; }
-    #pesan { font-weight: bold; text-align: center; margin-top: 10px; }
-    .hidden { display: none; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #f0f2f5; display: flex; justify-content: center; min-height: 100vh; padding: 15px; }
+    
+    .app-container {
+      width: 100%;
+      max-width: 400px;
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      padding-bottom: 20px;
+    }
+
+    /* Banner Foto SMAN 23 JAKARTA */
+    .banner {
+      width: 100%;
+      height: 160px;
+      background: url('https://sman23jkt.sch.id/wp-content/uploads/2021/04/cropped-Header-SMAN-23-Jakarta.jpg') center/cover no-repeat;
+      position: relative;
+    }
+
+    .banner-overlay {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background: linear-gradient(transparent, rgba(0, 51, 102, 0.8));
+      color: white;
+      text-align: center;
+      padding: 10px 5px;
+      font-weight: bold;
+      font-size: 18px;
+      letter-spacing: 1px;
+    }
+
+    /* Card Utama Sesuai Desain Canva */
+    .main-card {
+      margin: 15px;
+      padding: 20px 15px;
+      border: 2px solid #0056b3;
+      border-radius: 20px;
+      background: #fff;
+    }
+
+    /* Top Nav (Home & Profile Icons) */
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 0 5px;
+    }
+    .top-nav i { font-size: 24px; color: #333; cursor: pointer; }
+
+    /* Pilihan Status (Lingkaran Ikon) */
+    .status-group {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 25px;
+    }
+
+    .status-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .status-btn:hover { transform: scale(1.05); }
+
+    .icon-circle {
+      width: 65px;
+      height: 65px;
+      border-radius: 50%;
+      background-color: #0056b3;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 28px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      margin-bottom: 8px;
+      border: 2px solid transparent;
+      transition: all 0.3s;
+    }
+
+    .status-btn.active .icon-circle {
+      background-color: #002b5b;
+      border-color: #ffcc00;
+      transform: scale(1.1);
+    }
+
+    .status-label {
+      font-weight: bold;
+      color: #333;
+      font-size: 14px;
+    }
+
+    /* Form Input Area */
+    .form-container {
+      display: none;
+      margin-top: 15px;
+      border-top: 1px dashed #ccc;
+      padding-top: 15px;
+    }
+    .form-container.active { display: block; }
+
+    label { font-size: 13px; font-weight: bold; color: #444; margin-top: 8px; display: block; }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 4px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      outline: none;
+      font-size: 14px;
+    }
+
+    /* Buttons */
+    .btn-submit {
+      width: 100%;
+      background: #0056b3;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 25px;
+      font-weight: bold;
+      font-size: 15px;
+      margin-top: 15px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .btn-recap {
+      width: 70%;
+      display: block;
+      margin: 15px auto 0 auto;
+      background: #0056b3;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 14px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+    }
+
+    .btn-keluar {
+      width: 60%;
+      display: block;
+      margin: 15px auto 5px auto;
+      background: #ff3333;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 16px;
+      letter-spacing: 1px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(255,51,51,0.3);
+    }
+
+    #pesan { font-weight: bold; text-align: center; margin-top: 12px; font-size: 14px; }
   </style>
 </head>
 <body>
 
-  <div class="card">
-    <h2>Form Absensi Kelas 11</h2>
-    <form id="formAbsen">
-      <label>Nama Siswa:</label>
-      <input type="text" id="nama" placeholder="Ketik nama kamu..." required>
+  <div class="app-container">
+    <!-- Header Banner Foto SMAN 23 JAKARTA -->
+    <div class="banner">
+      <div class="banner-overlay">SMAN 23 JAKARTA</div>
+    </div>
 
-      <label>Kelas:</label>
-      <select id="kelas">
-        <option value="11-1">11-1</option>
-        <option value="11-2">11-2</option>
-        <option value="11-3">11-3</option>
-        <option value="11-4">11-4</option>
-        <option value="11-5">11-5</option>
-        <option value="11-6">11-6</option>
-        <option value="11-7">11-7</option>
-      </select>
-
-      <label>Keterangan:</label>
-      <select id="status" onchange="toggleUpload()">
-        <option value="Hadir">Hadir</option>
-        <option value="Izin">Izin</option>
-        <option value="Sakit">Sakit</option>
-      </select>
-
-      <!-- Input File (Muncul kalau pilih Izin/Sakit) -->
-      <div id="boxUpload" class="hidden">
-        <label>Upload Bukti Surat/Foto:</label>
-        <input type="file" id="fileBukti" accept="image/*,.pdf">
+    <!-- Main Card Box -->
+    <div class="main-card">
+      <!-- Top Navigation Icons -->
+      <div class="top-nav">
+        <i class="fa-solid fa-house" onclick="resetForm()"></i>
+        <i class="fa-solid fa-user-circle"></i>
       </div>
 
-      <button type="submit" id="btnKirim">Kirim Absen</button>
-    </form>
-    <p id="pesan"></p>
+      <!-- Option Buttons: Hadir, Sakit, Izin -->
+      <div class="status-group">
+        <div class="status-btn" onclick="selectStatus('Hadir', this)">
+          <div class="icon-circle"><i class="fa-solid fa-user-ninja"></i></div>
+          <span class="status-label">Hadir</span>
+        </div>
+        <div class="status-btn" onclick="selectStatus('Sakit', this)">
+          <div class="icon-circle"><i class="fa-solid fa-bed-pulse"></i></div>
+          <span class="status-label">Sakit</span>
+        </div>
+        <div class="status-btn" onclick="selectStatus('Izin', this)">
+          <div class="icon-circle"><i class="fa-solid fa-pen-to-square"></i></div>
+          <span class="status-label">Izin</span>
+        </div>
+      </div>
+
+      <!-- Form Absensi -->
+      <div class="form-container" id="formArea">
+        <form id="formAbsen">
+          <input type="hidden" id="statusChoice" value="Hadir">
+
+          <label>Nama Siswa:</label>
+          <input type="text" id="nama" placeholder="Ketik nama lengkap..." required>
+
+          <label>Kelas:</label>
+          <select id="kelas">
+            <option value="11-1">11-1</option>
+            <option value="11-2">11-2</option>
+            <option value="11-3">11-3</option>
+            <option value="11-4">11-4</option>
+            <option value="11-5">11-5</option>
+            <option value="11-6">11-6</option>
+            <option value="11-7">11-7</option>
+          </select>
+
+          <!-- Input File Surat (Otomatis muncul kalau Sakit/Izin) -->
+          <div id="boxUpload" style="display: none;">
+            <label>Upload Bukti Foto/Surat Dokter:</label>
+            <input type="file" id="fileBukti" accept="image/*">
+          </div>
+
+          <button type="submit" class="btn-submit" id="btnKirim">Kirim Absen</button>
+        </form>
+        <p id="pesan"></p>
+      </div>
+
+      <!-- Tombol Recap -->
+      <button class="btn-recap" onclick="alert('Fitur Recap Data Absensi Siap Digunakan!')">Recap</button>
+    </div>
+
+    <!-- Tombol KELUAR Merah -->
+    <button class="btn-keluar" onclick="alert('Terima kasih telah menggunakan Absensi SMAN 23!')">KELUAR</button>
   </div>
 
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbzTpkFh5DM_7PWOx8i6bTSrEJExv73EcTWydN4ch-XBZrj87y2ewn9FrtVfagtRkW3MGQ/exec';
+    // LINK BARU YANG SUDAH DIBERI IZIN AKSES DRIVE
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxEUO8ny62WqL9TXN2fHtOo6qSia2J44xhkL4YQ7b0C-VhgKslH5p95gzqvO1Jx-XDN-w/exec';
 
-    // Tampilkan input file hanya jika memilih Izin atau Sakit
-    function toggleUpload() {
-      const status = document.getElementById('status').value;
+    function selectStatus(status, element) {
+      document.querySelectorAll('.status-btn').forEach(btn => btn.classList.remove('active'));
+      element.classList.add('active');
+      
+      document.getElementById('statusChoice').value = status;
+      document.getElementById('formArea').classList.add('active');
+
       const boxUpload = document.getElementById('boxUpload');
-      if (status === 'Izin' || status === 'Sakit') {
-        boxUpload.classList.remove('hidden');
+      if (status === 'Sakit' || status === 'Izin') {
+        boxUpload.style.display = 'block';
       } else {
-        boxUpload.classList.add('hidden');
+        boxUpload.style.display = 'none';
       }
+    }
+
+    function resetForm() {
+      document.querySelectorAll('.status-btn').forEach(btn => btn.classList.remove('active'));
+      document.getElementById('formArea').classList.remove('active');
+      document.getElementById('formAbsen').reset();
+      document.getElementById('pesan').innerText = '';
     }
 
     document.getElementById('formAbsen').addEventListener('submit', async function(e) {
@@ -72,27 +280,26 @@
       const pesan = document.getElementById('pesan');
       const btnKirim = document.getElementById('btnKirim');
       const fileInput = document.getElementById('fileBukti');
+      const statusVal = document.getElementById('statusChoice').value;
       
-      pesan.innerText = 'Sedang mengirim data...';
+      pesan.innerText = 'Memproses data...';
       pesan.style.color = 'blue';
       btnKirim.disabled = true;
 
-      let fileData = null;
-      let fileName = null;
-      let fileType = null;
+      let fileData = null, fileName = null, fileType = null;
 
-      // Jika ada file yang diunggah
-      if (fileInput.files.length > 0) {
+      if ((statusVal === 'Sakit' || statusVal === 'Izin') && fileInput.files.length > 0) {
+        pesan.innerText = 'Mengompres foto & Mengirim...';
         const file = fileInput.files[0];
         fileName = file.name;
-        fileType = file.type;
-        fileData = await toBase64(file);
+        fileType = 'image/jpeg';
+        fileData = await compressImage(file); // Proses kompresi gambar
       }
 
       const data = {
         nama: document.getElementById('nama').value,
         kelas: document.getElementById('kelas').value,
-        status: document.getElementById('status').value,
+        status: statusVal,
         fileData: fileData,
         fileName: fileName,
         fileType: fileType
@@ -105,28 +312,46 @@
       .then(response => {
         pesan.innerText = 'Absen Berhasil Terkirim!';
         pesan.style.color = 'green';
-        document.getElementById('formAbsen').reset();
-        toggleUpload();
-        btnKirim.disabled = false;
+        setTimeout(() => { resetForm(); btnKirim.disabled = false; }, 2000);
       })
       .catch(error => {
         pesan.innerText = 'Gagal mengirim data. Coba lagi!';
         pesan.style.color = 'red';
         btnKirim.disabled = false;
-        console.error('Error!', error.message);
       });
     });
 
-    // Fungsi konversi file ke format Base64
-    const toBase64 = file => new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(resolveResult(reader.result));
-      reader.onerror = error => reject(error);
-    });
-    
-    function resolveResult(res) {
-      return res;
+    // Fungsi Kompresi Foto Otomatis
+    function compressImage(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = event => {
+          const img = new Image();
+          img.src = event.target.result;
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const maxWidth = 800; // Maksimal resolusi foto
+            const scaleSize = maxWidth / img.width;
+            
+            if (scaleSize < 1) {
+              canvas.width = maxWidth;
+              canvas.height = img.height * scaleSize;
+            } else {
+              canvas.width = img.width;
+              canvas.height = img.height;
+            }
+
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            // Kualitas kompresi 70% agar ringan tapi tetap jelas dibaca
+            const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+            resolve(compressedBase64);
+          };
+          img.onerror = error => reject(error);
+        };
+        reader.onerror = error => reject(error);
+      });
     }
   </script>
 </body>
